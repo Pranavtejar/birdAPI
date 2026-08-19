@@ -59,7 +59,7 @@ func form(cache *Cache) echo.HandlerFunc {
 		newEntry := map[string]string{
 			"birdName": c.FormValue("birdName"),
 			"location": c.FormValue("location"),
-			"count": "0"
+			"count": "0",
 		}
 
 		cache.write(newEntry)
@@ -111,6 +111,31 @@ func updateCount(c echo.Context) error {
 	})
 }
 
+func top(c echo.Context) error {
+	f, _ := os.ReadFile("bird.json")
+	var all []map[string]string
+	if len(f) > 0 {
+		json.Unmarshal(f, &all)
+	}
+
+	if len(all) == 0 {
+		return c.JSON(http.StatusNotFound, map[string]string{
+			"error": "no birds found",
+		})
+	}
+
+	topBird := all[0]
+	for _, bird := range all {
+		count1, _ := strconv.Atoi(bird["count"])
+		count2, _ := strconv.Atoi(topBird["count"])
+		if count1 > count2 {
+			topBird = bird
+		}
+	}
+
+	return c.JSON(http.StatusOK, topBird)
+}
+
 func main() {
 	e := echo.New()
 
@@ -127,12 +152,13 @@ func main() {
 
 	e.GET("/", home)
 	e.GET("/api", get)
-	e.GET("/api/findbird", func(c echo.Context) error {
+	e.GET("/findbird", func(c echo.Context) error {
 		return c.Render(http.StatusOK, "request.html", nil)
 	})
-
+	e.GET("/api/top", top)
+	
 	e.POST("/", form(cache))
-	e.POST("/api/findbird", updateCount)
+	e.POST("/findbird", updateCount)
 
 	e.Start(":8080")
 }
