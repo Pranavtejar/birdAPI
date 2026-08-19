@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"sync"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -58,6 +59,7 @@ func form(cache *Cache) echo.HandlerFunc {
 		newEntry := map[string]string{
 			"birdName": c.FormValue("birdName"),
 			"location": c.FormValue("location"),
+			"count": "0"
 		}
 
 		cache.write(newEntry)
@@ -82,6 +84,32 @@ func get(c echo.Context) error {
 	return c.JSON(http.StatusOK, all[len(all)-1])
 }
 
+func updateCount(c echo.Context) error {
+	birdName := c.FormValue("birdName")
+
+	f, _ := os.ReadFile("bird.json")
+	var all []map[string]string
+	if len(f) > 0 {
+		json.Unmarshal(f, &all)
+	}
+
+	for _, bird := range all {
+		if bird["birdName"] == birdName {
+			count, _ := strconv.Atoi(bird["count"])
+			count++
+			bird["count"] = strconv.Itoa(count)
+
+			// Update the bird entry in the JSON WriteFile
+			b, _ := json.MarshalIndent(all, "", "  ")
+			os.WriteFile("bird.json", b, 0644)
+			return c.JSON(http.StatusOK, bird)
+		}
+	}
+
+	return c.JSON(http.StatusNotFound, map[string]string{
+		"error": "bird not found",
+	})
+}
 
 func main() {
 	e := echo.New()
@@ -99,7 +127,12 @@ func main() {
 
 	e.GET("/", home)
 	e.GET("/api", get)
+	e.GET("/api/findbird", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "request.html", nil)
+	})
+
 	e.POST("/", form(cache))
+	e.POST("/api/findbird", updateCount)
 
 	e.Start(":8080")
 }

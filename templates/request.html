@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chennai Bird API</title>
+
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 13px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🐦 Chennai Bird API</h1>
+
+    <p>Search for a bird by name.</p>
+
+    <form
+        hx-get="/api"
+        hx-target="#result"
+        hx-swap="innerHTML"
+    >
+        <input
+            type="text"
+            name="birdName"
+            placeholder="Eagle"
+            required
+        >
+
+        <button type="submit">
+            Search
+        </button>
+    </form>
+
+    <div id="result"></div>
+
+</div>
+
+</body>
+</html>
