@@ -1,0 +1,27 @@
+{{define "findbird-form"}}
+<div class="card fade-in">
+  <div class="card-title">Find a Bird</div>
+  <form hx-post="/findbird" hx-target="#findbird-result" hx-swap="innerHTML">
+    <div class="field">
+      <label for="searchName">Bird Name</label>
+      <input type="text" id="searchName" name="birdName" placeholder="e.g. Indian Peafowl" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+  <div id="findbird-result" style="margin-top:1rem"></div>
+</div>
+{{end}}
+
+{{define "bird-found"}}
+<div class="result-card found fade-in">
+  <div class="result-label">Found</div>
+  <div class="result-name">{{.birdName}}</div>
+  <div class="result-detail">{{.location}} &middot; sightings: <strong>{{.count}}</strong></div>
+</div>
+{{end}}
+
+{{define "bird-not-found"}}
+<div class="result-card not-found fade-in">
+  Bird not found. Try another name.
+</div>
+{{end}}

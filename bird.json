@@ -1,6 +1,7 @@
 [
   {
     "birdName": "shikra",
+    "count": "1",
     "location": "asdfsd"
   },
   {
@@ -29,7 +30,7 @@
   },
   {
     "birdName": "pratyush",
-    "count": "1",
+    "count": "2",
     "location": "aradhyas hourse"
   },
   {
@@ -42,10 +43,21 @@
   },
   {
     "birdName": "arnav",
+    "count": "1",
     "location": "shollingnallur"
   },
   {
     "birdName": "pranav ",
     "location": "uthandi"
+  },
+  {
+    "birdName": "pranav",
+    "count": "2",
+    "location": "panaiyur"
+  },
+  {
+    "birdName": "cuckoo",
+    "count": "0",
+    "location": "marina beach"
   }
 ]

@@ -99,13 +99,19 @@ func updateCount(c echo.Context) error {
 			count++
 			bird["count"] = strconv.Itoa(count)
 
-			// Update the bird entry in the JSON WriteFile
 			b, _ := json.MarshalIndent(all, "", "  ")
 			os.WriteFile("bird.json", b, 0644)
+
+			if c.Request().Header.Get("HX-Request") == "true" {
+				return c.Render(http.StatusOK, "bird-found", bird)
+			}
 			return c.JSON(http.StatusOK, bird)
 		}
 	}
 
+	if c.Request().Header.Get("HX-Request") == "true" {
+		return c.Render(http.StatusOK, "bird-not-found", nil)
+	}
 	return c.JSON(http.StatusNotFound, map[string]string{
 		"error": "bird not found",
 	})
@@ -153,6 +159,9 @@ func main() {
 	e.GET("/", home)
 	e.GET("/api", get)
 	e.GET("/findbird", func(c echo.Context) error {
+		if c.Request().Header.Get("HX-Request") == "true" {
+			return c.Render(http.StatusOK, "findbird-form", nil)
+		}
 		return c.Render(http.StatusOK, "request.html", nil)
 	})
 	e.GET("/api/top", top)
