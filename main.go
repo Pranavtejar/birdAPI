@@ -14,7 +14,6 @@ import (
 type Template struct {
 	tmpl *template.Template
 }
-
 type Cache struct {
 	data map[string]string
 	sync.RWMutex
